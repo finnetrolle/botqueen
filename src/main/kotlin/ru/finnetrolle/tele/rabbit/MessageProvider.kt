@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.api.methods.send.SendMessage
+import javax.annotation.PostConstruct
 
 /**
  * Created by maxsyachin on 18.10.16.
@@ -21,6 +22,11 @@ open class MessageProvider {
 
     @Value("\${rabbit.tosend.e}")
     private lateinit var exchangeName: String
+
+    @PostConstruct
+    open fun init() {
+        LOG.info(" >>>>>>>>>>>>>> <<<<<<<<<<<<<<")
+    }
 
     open fun processMessage(message: SendMessage) {
         LOG.info("Message push ${message.text}")
