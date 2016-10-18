@@ -22,14 +22,16 @@ open class MessageListener {
     @RabbitListener(queues = arrayOf("\${rabbit.received.q}"))
     open fun processCallback(message: Message) {
         LOG.debug("{PROCESS_MESSAGE} ${message.chatId}")
-        val ans = ToSend(
-                method = "sendmessage",
-                chatId = message.chatId.toString(),
-                disableNotification = false,
-                disableWebPagePreview = false,
-                parseMode = "",
-                replyToMessageId = message.messageId,
-                text = message.text)
+        val ans = ToSend()
+
+        ans.method = "sendmessage"
+        ans.chatId = message.chatId.toString()
+        ans.disableNotification = false
+        ans.disableWebPagePreview = false
+        ans.parseMode = ""
+        ans.replyToMessageId = message.messageId
+        ans.text = message.text
+
         provider.processMessage(ans)
     }
 
