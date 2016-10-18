@@ -28,7 +28,7 @@ open class MessageProvider {
         LOG.info(" >>>>>>>>>>>>>> <<<<<<<<<<<<<<")
     }
 
-    open fun processMessage(message: SendMessage) {
+    open fun processMessage(message: ToSend) {
         LOG.info("Message push ${message.text}")
         template.convertAndSend(exchangeName, "", message)
     }
