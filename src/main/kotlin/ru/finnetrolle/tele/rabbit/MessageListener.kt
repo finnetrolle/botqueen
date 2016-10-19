@@ -5,7 +5,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.api.objects.Message
-import ru.finnetrolle.tele.util.MessageBuilder
 
 /**
  * Created by maxsyachin on 18.10.16.
