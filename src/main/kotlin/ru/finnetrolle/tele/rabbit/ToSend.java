@@ -1,5 +1,7 @@
 package ru.finnetrolle.tele.rabbit;
 
+import java.util.Objects;
+
 public class ToSend {
 
     private String method;
@@ -64,5 +66,37 @@ public class ToSend {
 
     public void setReplyToMessageId(Integer replyToMessageId) {
         this.replyToMessageId = replyToMessageId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ToSend toSend = (ToSend) o;
+        return Objects.equals(method, toSend.method) &&
+                Objects.equals(chatId, toSend.chatId) &&
+                Objects.equals(text, toSend.text) &&
+                Objects.equals(parseMode, toSend.parseMode) &&
+                Objects.equals(disableWebPagePreview, toSend.disableWebPagePreview) &&
+                Objects.equals(disableNotification, toSend.disableNotification) &&
+                Objects.equals(replyToMessageId, toSend.replyToMessageId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(method, chatId, text, parseMode, disableWebPagePreview, disableNotification, replyToMessageId);
+    }
+
+    @Override
+    public String toString() {
+        return "ToSend{" +
+                "method='" + method + '\'' +
+                ", chatId='" + chatId + '\'' +
+                ", text='" + text + '\'' +
+                ", parseMode='" + parseMode + '\'' +
+                ", disableWebPagePreview=" + disableWebPagePreview +
+                ", disableNotification=" + disableNotification +
+                ", replyToMessageId=" + replyToMessageId +
+                '}';
     }
 }
