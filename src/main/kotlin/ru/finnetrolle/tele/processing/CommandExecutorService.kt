@@ -18,6 +18,8 @@ open class CommandExecutorService {
 
     private val executors = mutableMapOf<String, CommandExecutor>()
 
+    private val LOG = LoggerFactory.getLogger(CommandExecutorService::class.java)
+
     @Autowired
     private lateinit var loc: MessageLocalization
 
@@ -26,6 +28,7 @@ open class CommandExecutorService {
     }
 
     open fun execute(command: String, data: String, pilot: Pilot, chatId: String): ToSend {
+        LOG.debug("EXECUTING $command with $data for $pilot in $chatId")
         if (command.toUpperCase().equals("/HELP")) {
             return MessageBuilder.build(chatId, generateHelp(pilot))
         }

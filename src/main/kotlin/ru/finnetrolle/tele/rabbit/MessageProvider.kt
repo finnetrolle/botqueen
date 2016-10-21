@@ -26,12 +26,14 @@ open class MessageProvider {
 
     open fun processMessage(message: ToSend)
     {
+        LOG.debug("PUSHER -> $message")
         MessageSplitter.splitLargeMessages(message)
                 .forEach { m -> template.convertAndSend(exchangeName, "", m) }
     }
 
     open fun publish(message: ToSend) = MessageSplitter.splitLargeMessages(message)
             .map { m ->
+                LOG.debug("PUSHER [r] -> $m")
                 template.convertAndSend(exchangeName, "", m)
                 1
             }.sum()

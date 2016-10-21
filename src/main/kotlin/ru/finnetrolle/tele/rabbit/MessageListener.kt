@@ -52,6 +52,7 @@ open class MessageListener {
                     MessageBuilder.build(message.chatId.toString(), "This option is impossible")
                 }
             }
+            LOG.debug("response is $response")
             provider.processMessage(response)
         } catch (e: Exception) {
             LOG.error("Exception found", e)
