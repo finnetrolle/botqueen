@@ -31,39 +31,39 @@ class BroadcastResource {
     @Autowired
     private lateinit var groupCaster: GroupBroadcastCommand
 
-    @Value("\${api.secret.cast.group}")
-    private lateinit var groupCastSecret: String
-
-    @Value("\${api.secret.cast.global}")
-    private lateinit var globalCastSecret: String
+//    @Value("\${api.secret.cast.group}")
+//    private lateinit var groupCastSecret: String
+//
+//    @Value("\${api.secret.cast.global}")
+//    private lateinit var globalCastSecret: String
 
     data class Message(var text: String = "", var secret: String = "", var from: String = "")
 
-    @RequestMapping(value = "/cast", method = arrayOf(RequestMethod.POST))
-    @ResponseBody
-    fun cast(@RequestBody message: Message): ResponseEntity<String> {
-        if (message.text.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-        if (!message.secret.equals(globalCastSecret)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
-        return ResponseEntity.ok(globalCaster.execute(Pilot(characterName = message.from), message.text))
-    }
-
-    data class GroupMessage(var text: String = "", var group: String = "", var secret: String = "", var from: String = "")
-
-    @RequestMapping(value = "/gc", method = arrayOf(RequestMethod.POST))
-    @ResponseBody
-    fun groupcast(@RequestBody message: GroupMessage): ResponseEntity<String> {
-        if (message.text.isEmpty() || message.group.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-        if (!message.secret.equals(groupCastSecret)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
-        return ResponseEntity.ok(groupCaster.execute(Pilot(characterName = message.from), "${message.group} ${message.text}"))
-    }
+//    @RequestMapping(value = "/cast", method = arrayOf(RequestMethod.POST))
+//    @ResponseBody
+//    fun cast(@RequestBody message: Message): ResponseEntity<String> {
+//        if (message.text.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//        if (!message.secret.equals(globalCastSecret)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+//        }
+//        return ResponseEntity.ok(globalCaster.execute(Pilot(characterName = message.from), message.text))
+//    }
+//
+//    data class GroupMessage(var text: String = "", var group: String = "", var secret: String = "", var from: String = "")
+//
+//    @RequestMapping(value = "/gc", method = arrayOf(RequestMethod.POST))
+//    @ResponseBody
+//    fun groupcast(@RequestBody message: GroupMessage): ResponseEntity<String> {
+//        if (message.text.isEmpty() || message.group.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//        if (!message.secret.equals(groupCastSecret)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+//        }
+//        return ResponseEntity.ok(groupCaster.execute(Pilot(characterName = message.from), "${message.group} ${message.text}"))
+//    }
 
     @RequestMapping(value = "/lu", method = arrayOf(RequestMethod.GET))
     @ResponseBody
