@@ -33,16 +33,24 @@ open class MessageListener {
         LOG.debug("{PROCESS_MESSAGE} ${message.chatId}")
         try {
             val authResult = auth.selectResponse(message.text, message.from, message.chatId.toString())
+            LOG.debug("Auth result is $authResult")
             val response = when (authResult) {
-                is AuthPreprocessor.Auth.Intercepted -> {authResult.response}
+                is AuthPreprocessor.Auth.Intercepted -> {
+                    LOG.debug("intercepted")
+                    authResult.response
+                }
                 is AuthPreprocessor.Auth.Authorized -> {
+                    LOG.debug("authorized")
                     executor.execute(
                             message.text.substringBefore(" "),
                             message.text.substringAfter(" "),
                             Pilot(),
                             message.chatId.toString())
                 }
-                else -> { MessageBuilder.build(message.chatId.toString(), "This option is impossible") }
+                else -> {
+                    LOG.error("Auth failed and something is very bad")
+                    MessageBuilder.build(message.chatId.toString(), "This option is impossible")
+                }
             }
             provider.processMessage(response)
         } catch (e: Exception) {
