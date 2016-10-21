@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.api.objects.Message
 import ru.finnetrolle.tele.model.Pilot
+import ru.finnetrolle.tele.processing.AuthPreprocessor
 import ru.finnetrolle.tele.processing.CommandExecutorService
 import ru.finnetrolle.tele.util.MessageBuilder
 
@@ -24,26 +25,29 @@ open class MessageListener {
     @Autowired
     private lateinit var executor: CommandExecutorService
 
+    @Autowired
+    private lateinit var auth: AuthPreprocessor
+
     @RabbitListener(queues = arrayOf("\${rabbit.received.q}"))
     open fun processCallback(message: Message) {
         LOG.debug("{PROCESS_MESSAGE} ${message.chatId}")
-
-        val result = executor.execute(
-                message.text.substringBefore(" "),
-                message.text.substringAfter(" "),
-                Pilot(),
-                message.chatId.toString());
-
-        /*
-        return Auth.Authorized(pilot, text.substringBefore(" "), text.substringAfter(" "))
-
-        open fun process(command: String, data: String, pilot: Pilot): SendMessage {
-        log.debug("Processing command $command from $pilot with data = $data")
-        return ces.execute(command, data, pilot, pilot.id.toString())
-    }
-         */
-
-        provider.processMessage(result)
+        try {
+            val authResult = auth.selectResponse(message.text, message.from, message.chatId.toString())
+            val response = when (authResult) {
+                is AuthPreprocessor.Auth.Intercepted -> {authResult.response}
+                is AuthPreprocessor.Auth.Authorized -> {
+                    executor.execute(
+                            message.text.substringBefore(" "),
+                            message.text.substringAfter(" "),
+                            Pilot(),
+                            message.chatId.toString())
+                }
+                else -> { MessageBuilder.build(message.chatId.toString(), "This option is impossible") }
+            }
+            provider.processMessage(response)
+        } catch (e: Exception) {
+            LOG.error("Exception found", e)
+        }
     }
 
 }

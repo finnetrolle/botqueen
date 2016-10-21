@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.api.methods.send.SendMessage
+import ru.finnetrolle.tele.util.MessageSplitter
 import javax.annotation.PostConstruct
 
 /**
@@ -23,14 +24,16 @@ open class MessageProvider {
     @Value("\${rabbit.tosend.e}")
     private lateinit var exchangeName: String
 
-    @PostConstruct
-    open fun init() {
-        LOG.info(" >>>>>>>>>>>>>> <<<<<<<<<<<<<<")
+    open fun processMessage(message: ToSend)
+    {
+        MessageSplitter.splitLargeMessages(message)
+                .forEach { m -> template.convertAndSend(exchangeName, "", m) }
     }
 
-    open fun processMessage(message: ToSend) {
-        LOG.info("Message push ${message.text}")
-        template.convertAndSend(exchangeName, "", message)
-    }
+    open fun publish(message: ToSend) = MessageSplitter.splitLargeMessages(message)
+            .map { m ->
+                template.convertAndSend(exchangeName, "", m)
+                1
+            }.sum()
 
 }
