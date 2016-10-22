@@ -28,7 +28,9 @@ open class MessageProvider {
     {
         LOG.debug("PUSHER -> $message")
         MessageSplitter.splitLargeMessages(message)
-                .forEach { m -> template.convertAndSend(exchangeName, "", m) }
+                .forEach { m ->
+                    template.convertAndSend(exchangeName, "", m)
+                }
     }
 
     open fun publish(message: ToSend) = MessageSplitter.splitLargeMessages(message)

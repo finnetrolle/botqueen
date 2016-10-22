@@ -14,11 +14,14 @@ object MessageSplitter {
         val msgs = mutableListOf<ToSend>()
         var sb = StringBuilder()
         message.text.split(" ").forEach { w ->
-            if (sb.length + w.length > 4000) {
+            if (sb.length + w.length + 1 > 4000) {
                 msgs.add(MessageBuilder.build(message.chatId, sb.toString()))
                 sb = StringBuilder()
             }
-            sb.append(w)
+            sb.append(w).append(" ")
+        }
+        if (sb.length != 0) {
+            msgs.add(MessageBuilder.build(message.chatId, sb.toString()))
         }
         return msgs
     }
