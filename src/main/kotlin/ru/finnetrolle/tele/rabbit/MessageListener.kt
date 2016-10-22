@@ -44,7 +44,7 @@ open class MessageListener {
                     executor.execute(
                             message.text.substringBefore(" "),
                             message.text.substringAfter(" "),
-                            Pilot(),
+                            authResult.pilot,
                             message.chatId.toString())
                 }
                 else -> {
