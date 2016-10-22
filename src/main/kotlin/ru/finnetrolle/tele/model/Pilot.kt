@@ -24,6 +24,8 @@ interface PilotRepository: JpaRepository<Pilot, Int> {
 
     fun findByRenegadeFalse(): List<Pilot>
 
+    fun findByRenegadeTrue(): List<Pilot>
+
     fun findByModeratorTrue(): List<Pilot>
 }
 

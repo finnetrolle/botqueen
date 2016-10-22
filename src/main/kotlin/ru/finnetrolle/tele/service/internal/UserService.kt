@@ -130,7 +130,7 @@ open class UserService {
         }
     }
 
-    open fun getModerators(): List<String> = pilotRepo.findByModeratorTrue().map { p -> p.characterName }
+    open fun getModerators(): List<Pilot> = pilotRepo.findByModeratorTrue()
 
     open fun getCharacters(): List<String> = pilotRepo.findAll().map { p -> p.characterName }.toList()
 
@@ -142,6 +142,8 @@ open class UserService {
     }
 
     open fun getAllUsers() = pilotRepo.findAll()
+
+    open fun getRenegades() = pilotRepo.findByRenegadeTrue()
 
     open fun removeByTelegramId(chatId: String) {
         val id = chatId.toInt()
