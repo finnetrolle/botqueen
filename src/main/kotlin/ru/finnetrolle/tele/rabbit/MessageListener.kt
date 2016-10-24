@@ -35,22 +35,9 @@ open class MessageListener {
             val authResult = auth.selectResponse(message.text, message.from, message.chatId.toString())
             LOG.debug("Auth result is $authResult")
             val response = when (authResult) {
-                is AuthPreprocessor.Auth.Intercepted -> {
-                    LOG.debug("intercepted")
-                    authResult.response
-                }
-                is AuthPreprocessor.Auth.Authorized -> {
-                    LOG.debug("authorized")
-                    executor.execute(
-                            message.text.substringBefore(" "),
-                            message.text.substringAfter(" "),
-                            authResult.pilot,
-                            message.chatId.toString())
-                }
-                else -> {
-                    LOG.error("Auth failed and something is very bad")
-                    MessageBuilder.build(message.chatId.toString(), "This option is impossible")
-                }
+                is AuthPreprocessor.Auth.Intercepted -> { authResult.response }
+                is AuthPreprocessor.Auth.Authorized -> { execute(message, authResult.pilot) }
+                else -> { MessageBuilder.build(message.chatId.toString(), "This option is impossible") }
             }
             LOG.debug("response is $response")
             provider.processMessage(response)
@@ -58,5 +45,12 @@ open class MessageListener {
             LOG.error("Exception found", e)
         }
     }
+
+    open fun execute(message: Message, pilot: Pilot) =
+            executor.execute(
+                    message.text.substringBefore(" "),
+                    message.text.substringAfter(" "),
+                    pilot,
+                    message.chatId.toString())
 
 }
