@@ -38,7 +38,7 @@ open class GroupBroadcastCommand : AbstractSecuredCommand() {
         val text = data.substringAfter(" ")
         val groupName = data.substringBefore(" ")
         val users = userService.getLegalUsers(groupName)
-        val message = "Broadcast from ${pilot.characterName} to $groupName at ${Date()} \n$text"
+        val message = loc.getMessage("broadcast.template", pilot.characterName, groupName, Date(), text)
         users.forEach { u -> provider.publish(MessageBuilder.build(u.id.toString(), message)) }
         return loc.getMessage("messages.broadcast.result", users.size)
     }
