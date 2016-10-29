@@ -25,7 +25,7 @@ open class AuthPreprocessor {
 
     private val KEY_LENGTH: Int = 6
 
-    private fun tryRegister(tryApp: ExternalRegistrationService.ApproveResult) = when (tryApp) {
+    private fun defineAnswerText(tryApp: ExternalRegistrationService.ApproveResult) = when (tryApp) {
         is ExternalRegistrationService.ApproveResult.Success ->
             loc.getMessage("telebot.fastreg.welcome", tryApp.name)
         is ExternalRegistrationService.ApproveResult.Forbidden ->
@@ -45,7 +45,7 @@ open class AuthPreprocessor {
         val pilot = userService.getPilot(user.id)
         if (pilot == null) {
             if (text.length == KEY_LENGTH) {
-                val regResult = tryRegister(externalRegistrationService.tryToApproveContender(text.toUpperCase(), user))
+                val regResult = defineAnswerText(externalRegistrationService.tryToApproveContender(text.toUpperCase(), user))
                 return Auth.Intercepted(MessageBuilder.build(chatId, regResult))
             } else {
                 return Auth.Intercepted(MessageBuilder.build(chatId, loc.getMessage("messages.please.register")))
